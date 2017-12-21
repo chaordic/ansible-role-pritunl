@@ -1,0 +1,16 @@
+    {
+        "mongodb_uri": "{{ pritunl_mongodb_uri }}",
+        {% if pritunl_secondary_mongodb -%}
+        "secondary_mongodb_uri": "{{ pritunl_secondary_mongodb_uri }}",
+        {% endif -%}
+        "server_key_path": "{{ pritunl_server_key_path }}",
+        "log_path": "{{ pritunl_log_path }}",
+        "static_cache": {{ pritunl_static_cache }},
+        "server_cert_path": "{{ pritunl_server_cert_path }}",
+        "temp_path": "{{ pritunl_temp_path }}",
+        "bind_addr": "{{ pritunl_bind_addr }}",
+        "port": "{{ pritunl_port }}",
+        "debug": {{ pritunl_debug }},
+        "www_path": "{{ pritunl_www_path }}",
+        "local_address_interface": "{{ pritunl_local_address_interface }}"
+    }

@@ -1,0 +1,52 @@
+---
+# Increase Open Limit File
+# https://docs.pritunl.com/v1/docs/configuration-5#section-increase-open-file-limit
+- block:
+  - name: Increase open file limit
+    pam_limits:
+      domain: "*"
+      limit_type: hard
+      limit_item: nofile
+      value: 64000
+
+  - name: Increase open file limit
+    pam_limits:
+      domain: "*"
+      limit_type: soft
+      limit_item: nofile
+      value: 64000
+
+  - name: Increase open file limit
+    pam_limits:
+      domain: root
+      limit_type: hard
+      limit_item: nofile
+      value: 64000
+
+  - name: Increase open file limit
+    pam_limits:
+      domain: root
+      limit_type: soft
+      limit_item: nofile
+      value: 64000
+  when: pritunl_increase_open_limit_file
+
+- name: start mongodb
+  service:
+    name: mongodb
+    state: started
+    enabled: yes
+
+- name: start pritunl
+  service:
+    name: pritunl
+    state: started
+    enabled: yes
+
+- name: Update pritunl conf file
+  template:
+    src: "pritunl.conf.j2"
+    dest: "/etc/pritunl.conf"
+  notify: restart pritunl
+  tags:
+    - pritunl-update

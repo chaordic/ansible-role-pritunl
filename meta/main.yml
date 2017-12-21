@@ -1,0 +1,8 @@
+galaxy_info:
+  author: Raphael P Ribeiro
+  description: Role that install and configure pritunl
+  company: Linx+Neemu+Chaordic
+  license: GPLv3
+  min_ansible_version: 2.1
+  galaxy_tags: []
+dependencies: []
