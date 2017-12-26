@@ -36,6 +36,7 @@
     name: mongodb
     state: started
     enabled: yes
+  when: not pritunl_mongodb_external and pritunl_mongodb_version is defined
 
 - name: start pritunl
   service:
