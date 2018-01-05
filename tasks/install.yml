@@ -6,17 +6,11 @@
     state: present
   when: not pritunl_mongodb_external and pritunl_mongodb_version is defined
 
-- name: Add pritunl apt repository
-  apt_repository:
-    repo: deb http://repo.pritunl.com/stable/apt xenial main
-    filename: "pritunl"
-    state: present
-
-- name: Add apt keys
-  apt_key:
-    keyserver: keyserver.ubuntu.com
-    id: "{{ item }}"
-  with_items: "{{ pritunl_apt_keys }}"
+- name: Check if pritunl is installed
+  shell: dpkg -l pritunl | grep '^ii'
+  register: pritunl_check_deb
+  failed_when: pritunl_check_deb.rc > 1
+  changed_when: pritunl_check_deb.rc == 1
 
 - name: Update package lists
   apt: update_cache=yes
@@ -28,8 +22,22 @@
     update_cache: no
   when: not pritunl_mongodb_external and pritunl_mongodb_version is defined
 
-- name: Install pritunl
-  apt:
-    name: pritunl
-    state: latest
-    update_cache: no
+- block:
+  - name: Ensures pritunl dependencies are installed
+    apt:
+      name: "{{ item }}"
+      state: latest
+      update_cache: no
+    with_items:
+      - python
+      - net-tools
+      - openvpn
+      - openssl
+      - bridge-utils
+      - ca-certificates
+
+  - name: Download and install pritunl v{{ pritunl_version }}
+    apt:
+      deb: "https://github.com/pritunl/pritunl/releases/download/{{ pritunl_version }}/pritunl_{{ pritunl_version }}-0ubuntu1.xenial_all.deb"
+
+  when: pritunl_check_deb.rc == 1

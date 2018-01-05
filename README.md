@@ -14,6 +14,12 @@ Role Variables
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
 ```yaml
+    pritunl_version: 1.28.1548.86
+```
+
+Set pritunl version.
+
+```yaml
     pritunl_mongodb_version: 3.4
     pritunl_mongodb_external: False
 ```

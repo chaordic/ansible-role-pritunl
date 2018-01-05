@@ -1,10 +1,8 @@
 ---
 # install
+pritunl_version: 1.28.1548.86
 pritunl_mongodb_version: 3.4
 pritunl_mongodb_external: False
-pritunl_apt_keys:
-  - 0C49F3730359A14518585931BC711F9BA15703C6
-  - 7568D9BB55FF9E5287D586017AE645C0CF8E292A
 
 # configuration
 pritunl_increase_open_limit_file: True
