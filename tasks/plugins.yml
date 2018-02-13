@@ -1,0 +1,18 @@
+---
+- pip:
+    name: "{{ item }}"
+    executable: /usr/lib/pritunl/bin/pip
+  with_items: "{{ pritunl_plugins_requirements }}"
+
+- name: Creates pritunl plugins directory
+  file:
+    path: /var/lib/pritunl/plugins
+    state: directory
+    mode: 0775
+
+- name: copy plugin files to pritunl
+  template:
+    src: "pritunl-plugin-graylog.j2"
+    dest: /var/lib/pritunl/plugins/graylog.py
+  notify: restart pritunl
+  when: pritunl_plugin_graylog_server is defined and pritunl_plugin_graylog_port is defined

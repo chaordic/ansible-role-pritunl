@@ -1,3 +1,6 @@
 ---
 - include: install.yml
 - include: config.yml
+- include: plugins.yml
+  tags: pritunl-plugins
+  when: pritunl_plugins
