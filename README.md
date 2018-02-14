@@ -30,7 +30,7 @@ Set mongodb version and define an external mongodb or not.
     pritunl_increase_open_limit_file: True
 ```
 
-Increase the open file limit on the system OS in order to prevent connections issues on servers with high load.
+Increases the open file limit on the system OS in order to prevent connections issues on servers with high load.
 
 ```yaml
     pritunl_mongodb_uri: mongodb://localhost:27017/pritunl
@@ -53,7 +53,16 @@ pritunl configuration
     pritunl_secondary_mongodb_uri: ""
 ```
 
-Enable secondary MongoDB database configuration.
+Enables secondary MongoDB database configuration.
+
+```yaml
+    pritunl_plugins:
+      - name: graylog
+        server: localhost
+        port: 1999
+```
+
+Enable and installs pritunl graylog plugin.
 
 Example Playbook
 ----------------
