@@ -56,9 +56,10 @@ pritunl configuration
 Enables secondary MongoDB database configuration.
 
 ```yaml
-    pritunl_plugins: True
-    pritunl_plugin_graylog_server: localhost
-    pritunl_plugin_graylog_port: 1999
+    pritunl_plugins:
+      - name: graylog
+        server: localhost
+        port: 1999
 ```
 
 Enable and installs pritunl graylog plugin.

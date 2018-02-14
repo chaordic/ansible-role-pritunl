@@ -1,8 +1,8 @@
 import graypy
 import logging
 
-graylog_server = "{{ pritunl_plugin_graylog_server }}"
-graylog_port = {{ pritunl_plugin_graylog_port }}
+graylog_server = "{{pritunl_plugins | selectattr("name","equalto","graylog") | map(attribute='server') | join }}"
+graylog_port = {{pritunl_plugins | selectattr("name","equalto","graylog") | map(attribute='port') | join }}
 
 class OpsLogging(object):
     """Ops Logger - An Logging subsystem """

@@ -15,4 +15,4 @@
     src: "pritunl-plugin-graylog.j2"
     dest: /var/lib/pritunl/plugins/graylog.py
   notify: restart pritunl
-  when: pritunl_plugin_graylog_server is defined and pritunl_plugin_graylog_port is defined
+  when: pritunl_plugins | selectattr("name","equalto","graylog") | list | count == 1
