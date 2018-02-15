@@ -17,4 +17,5 @@
   notify: restart pritunl
   when: pritunl_plugins | selectattr("name","equalto",item) | list | count == 1
   with_items:
+    - graylog
     - default-groups
