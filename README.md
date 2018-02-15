@@ -60,9 +60,11 @@ Enables secondary MongoDB database configuration.
       - name: graylog
         server: localhost
         port: 1999
+      - name: default-groups
+        groups: "['admin','developers']"
 ```
 
-Enable and installs pritunl graylog plugin.
+Enable and installs pritunl plugins
 
 Example Playbook
 ----------------

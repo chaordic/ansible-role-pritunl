@@ -10,9 +10,11 @@
     state: directory
     mode: 0775
 
-- name: copy plugin files to pritunl
+- name: install plugins
   template:
-    src: "pritunl-plugin-graylog.j2"
-    dest: /var/lib/pritunl/plugins/graylog.py
+    src: "pritunl-plugin-{{ item }}.j2"
+    dest: "/var/lib/pritunl/plugins/{{ item }}.py"
   notify: restart pritunl
-  when: pritunl_plugins | selectattr("name","equalto","graylog") | list | count == 1
+  when: pritunl_plugins | selectattr("name","equalto",item) | list | count == 1
+  with_items:
+    - default-groups
