@@ -108,24 +108,13 @@ def server_stop(host_id, host_name, server_id, server_name, port, protocol,
 def sso_authenticate(sso_type, host_id, host_name, user_name, user_email,
         remote_ip, sso_org_names, sso_group_names, **kwargs):
 
-    if sso_type == 'duo':
-        pass
-    elif sso_type == 'google':
-        pass
-    elif sso_type == 'slack':
-        pass
-    elif sso_type == 'saml':
-        pass
-    elif sso_type == 'radius':
-        pass
-
     fields = {'pritunl_'+k: v for k,v in locals().items()}
 
     if 'auth_ok':
         short_message = "["+ host_name +"] User "+ user_name +" successfully signed in through "+ sso_type +" SSO"
         logger._print_dict(short_message,fields)
 
-        return True, 'organization_name', ['group', 'names']
+        return True, '', []
 
     else:
         short_message = "["+ host_name +"] User "+ user_name +" failed to sign in through "+ sso_type +" SSO"
