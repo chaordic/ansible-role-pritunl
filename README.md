@@ -1,5 +1,4 @@
-Ansible Role: pritunl
-=========
+# Ansible Role: pritunl
 
 A ansible role to install and configure [pritunl](https://pritunl.com/).
 
@@ -60,14 +59,33 @@ Enables secondary MongoDB database configuration.
       - name: graylog
         server: localhost
         port: 1999
-      - name: default-groups
-        groups: "['admin','developers']"
+      - name: default_groups
+        groups: ['developers','engineers']
+      - name: ldap
+        uri: "ldap://ldap.internal:389"                                   # ldap uri server
+        bind_dn: "uid=admin,cn=users,cn=accounts,dc=opensource,dc=org"    # full user dn that will bind to the ldap server
+        password: "yourpassword"                                          # ldap bind user password
+        base_dn: "cn=users,cn=accounts,dc=opensource,dc=org"              # the top of your ldap domain structure
+        groups_dn: "cn=groups,cn=accounts,dc=opensource,dc=org"           # groups ldap domain
+        search_attribute: memberOf                                        # ldap search attribute returned by query
+        group_pattern: groupname                                          # filter all ldap group names that start with "groupname" and associate to user
 ```
 
-Enable and installs pritunl plugins
+Enables and installs pritunl plugins.
 
-Example Playbook
-----------------
+```yaml
+    pritunl_api:
+        url: https://localhost
+        token: XXXX
+        secret: XXXX
+        organization: MyOrg
+```
+
+Define token API authentication. Required to LDAP plugin.
+
+
+## Example Playbook
+
 ```yaml
 - hosts: servers
   connection: ssh
@@ -84,12 +102,10 @@ Example Playbook
      - role: pritunl.chaordic
 ```
 
-License
--------
+## License
 
 GPLv3
 
-Author Information
-------------------
+## Author Information
 
 Cloud Operations Team, SRE. Linx+Neemu+Chaordic

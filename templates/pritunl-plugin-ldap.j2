@@ -1,0 +1,38 @@
+import os
+import pritunlsdk
+from pritunl import logger
+from ldap_simple_search import LDAPSearch
+
+os.environ["PRITUNL_API_URL"] = "{{ pritunl_api.url }}"
+os.environ["PRITUNL_API_TOKEN"] = "{{ pritunl_api.token }}"
+os.environ["PRITUNL_API_SECRET"] = "{{ pritunl_api.secret }}"
+
+PRITUNL_ORG = "{{ pritunl_api.organization }}"
+GROUP_PATTERN = "{{pritunl_plugins | selectattr("name","equalto","ldap") | map(attribute='group_pattern') | join }}"
+
+URI = "{{pritunl_plugins | selectattr("name","equalto","ldap") | map(attribute='uri') | join }}"
+BIND_DN = "{{pritunl_plugins | selectattr("name","equalto","ldap") | map(attribute='bind_dn') | join }}"
+PASSWORD = "{{pritunl_plugins | selectattr("name","equalto","ldap") | map(attribute='password') | join }}"
+BASE_DN = "{{pritunl_plugins | selectattr("name","equalto","ldap") | map(attribute='base_dn') | join }}"
+GROUPS_DN = "{{pritunl_plugins | selectattr("name","equalto","ldap") | map(attribute='groups_dn') | join }}"
+SEARCH_ATTRIBUTE = ['{{pritunl_plugins | selectattr("name","equalto","ldap") | map(attribute='search_attribute') | join }}']
+
+L = LDAPSearch(URI, BIND_DN, PASSWORD)
+
+# ldapsearch callback
+def filter_groups(dn, record):
+    return [item.split(',')[0].replace('cn=', '') for item in record['memberOf'] if GROUP_PATTERN in item]
+
+def sso_authenticate(sso_type, host_id, host_name, user_name, user_email,
+                     remote_ip, sso_org_names, sso_group_names, **kwargs):
+
+    search_filter = "(&(mail="+user_name+")(memberOf=cn="+GROUP_PATTERN+"*,{{ GROUPS_DN }}))"
+
+    ldap_groups = L.search(BASE_DN, search_filter,
+                           SEARCH_ATTRIBUTE, filter_groups)
+    if 'auth_ok' and ldap_groups:
+        pritunlsdk.post_pritunl_user(PRITUNL_ORG,user_name,user_groups=ldap_groups)
+        logger.info("Add groups %s to user '%s'" % (ldap_groups,user_name))
+        return True, '', []
+    else:
+        return False, None, None

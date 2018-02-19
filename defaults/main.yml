@@ -23,5 +23,7 @@ pritunl_secondary_mongodb: False
 pritunl_secondary_mongodb_uri: ""
 
 pritunl_plugins_requirements:
-  - logging
   - graypy
+  - ldap-simple-search
+  - python-ldap
+  - pritunlsdk

@@ -10,6 +10,18 @@
     state: directory
     mode: 0775
 
+- name: Install python-ldap dependencies
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: no
+  with_items:
+    - libsasl2-dev
+    - python-dev
+    - libldap2-dev
+    - libssl-dev
+  when: pritunl_plugins | selectattr("name","equalto","ldap") | list | count == 1
+
 - name: install plugins
   template:
     src: "pritunl-plugin-{{ item }}.j2"
@@ -19,3 +31,10 @@
   with_items:
     - graylog
     - default-groups
+
+- name: install ldap plugin
+  template:
+    src: pritunl-plugin-ldap.j2
+    dest: /var/lib/pritunl/plugins/ldap.py
+  notify: restart pritunl
+  when: pritunl_plugins | selectattr("name","equalto","ldap") | list | count == 1 and pritunl_api is defined
