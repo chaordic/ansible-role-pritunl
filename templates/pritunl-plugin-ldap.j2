@@ -26,7 +26,7 @@ def filter_groups(dn, record):
 def sso_authenticate(sso_type, host_id, host_name, user_name, user_email,
                      remote_ip, sso_org_names, sso_group_names, **kwargs):
 
-    search_filter = "(&(mail="+user_name+")(memberOf=cn="+GROUP_PATTERN+"*,{{ GROUPS_DN }}))"
+    search_filter = "(&(mail="+user_name+")(memberOf=cn="+GROUP_PATTERN+"*,"+GROUPS_DN+"))"
 
     ldap_groups = L.search(BASE_DN, search_filter,
                            SEARCH_ATTRIBUTE, filter_groups)
