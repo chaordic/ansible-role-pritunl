@@ -1,15 +1,4 @@
 ---
-- pip:
-    name: "{{ item }}"
-    executable: /usr/lib/pritunl/bin/pip
-  with_items: "{{ pritunl_plugins_requirements }}"
-
-- name: Creates pritunl plugins directory
-  file:
-    path: /var/lib/pritunl/plugins
-    state: directory
-    mode: 0775
-
 - name: Install python-ldap dependencies
   apt:
     name: "{{ item }}"
@@ -21,6 +10,17 @@
     - libldap2-dev
     - libssl-dev
   when: pritunl_plugins | selectattr("name","equalto","ldap") | list | count == 1
+
+- pip:
+    name: "{{ item }}"
+    executable: /usr/lib/pritunl/bin/pip
+  with_items: "{{ pritunl_plugins_pip_requirements }}"
+
+- name: Creates pritunl plugins directory
+  file:
+    path: /var/lib/pritunl/plugins
+    state: directory
+    mode: 0775
 
 - name: install plugins
   template:
