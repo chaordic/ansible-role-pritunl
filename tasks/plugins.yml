@@ -1,20 +1,28 @@
 ---
-- name: Install python-ldap dependencies
-  apt:
-    name: "{{ item }}"
-    state: latest
-    update_cache: no
-  with_items:
-    - libsasl2-dev
-    - python-dev
-    - libldap2-dev
-    - libssl-dev
-  when: pritunl_plugins | selectattr("name","equalto","ldap") | list | count == 1
-
-- pip:
+- name: Install plugins dependencies
+  pip:
     name: "{{ item }}"
     executable: /usr/lib/pritunl/bin/pip
   with_items: "{{ pritunl_plugins_pip_requirements }}"
+
+- block:
+  - name: Install python-ldap dependencies
+    apt:
+      name: "{{ item }}"
+      state: latest
+      update_cache: no
+    with_items:
+      - libsasl2-dev
+      - python-dev
+      - libldap2-dev
+      - libssl-dev
+
+  - name: Install python-ldap dependencies
+    pip:
+      name: python-ldap
+      executable: /usr/lib/pritunl/bin/pip
+
+  when: pritunl_plugins | selectattr("name","equalto","ldap") | list | count == 1
 
 - name: Creates pritunl plugins directory
   file:
