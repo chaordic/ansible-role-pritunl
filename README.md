@@ -85,6 +85,7 @@ Example Playbook
     pritunl_secondary_mongodb: True
     pritunl_mongodb_uri: mongodb://db01:27017/pritunl
     pritunl_secondary_mongodb_uri: mongodb://db02:27017/pritunl
+    pritunl_reverse_proxy: True
     pritunl_server_port: 3000
 
   roles:
