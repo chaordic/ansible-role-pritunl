@@ -51,3 +51,21 @@
   notify: restart pritunl
   tags:
     - pritunl-update
+
+- name: Check app.server_port option
+  shell: pritunl get app.server_port
+  register: app_server_port
+  failed_when: app_server_port.rc != 0
+  changed_when: False
+  when: pritunl_server_port is defined
+  tags:
+    - pritunl-reverse-proxy
+
+- name: "Set app.server_port to {{ pritunl_server_port }}"
+  shell: "pritunl set app.server_port {{ pritunl_server_port }}"
+  register: resp
+  failed_when: resp.rc != 0
+  changed_when: "'app.server_port = {{ pritunl_server_port }}' in resp.stdout"
+  when: "'app.server_port = {{ pritunl_server_port }}' not in app_server_port.stdout and pritunl_server_port is defined"
+  tags:
+    - pritunl-reverse-proxy
