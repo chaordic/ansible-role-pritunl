@@ -32,13 +32,10 @@
 
 - name: install plugins
   template:
-    src: "pritunl-plugin-{{ item }}.j2"
-    dest: "/var/lib/pritunl/plugins/{{ item }}.py"
+    src: "pritunl-plugin-graylog.j2"
+    dest: "/var/lib/pritunl/plugins/graylog.py"
   notify: restart pritunl
-  when: pritunl_plugins | selectattr("name","equalto",item) | list | count == 1
-  with_items:
-    - graylog
-    - default-groups
+  when: pritunl_plugins | selectattr("name","equalto","graylog") | list | count == 1
 
 - name: install ldap plugin
   template:

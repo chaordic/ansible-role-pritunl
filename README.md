@@ -59,8 +59,6 @@ Enables secondary MongoDB database configuration.
       - name: graylog
         server: localhost
         port: 1999
-      - name: default_groups
-        groups: ['developers','engineers']
       - name: ldap
         uri: "ldap://ldap.internal:389"                                   # ldap uri server
         bind_dn: "uid=admin,cn=users,cn=accounts,dc=opensource,dc=org"    # full user dn that will bind to the ldap server
