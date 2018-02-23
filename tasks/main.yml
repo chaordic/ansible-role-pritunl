@@ -1,6 +1,12 @@
 ---
 - include: install.yml
+
 - include: config.yml
+
+- include: reverse-proxy.yml
+  when: pritunl_reverse_proxy is defined
+  tags: pritunl-reverse-proxy
+
 - include: plugins.yml
-  tags: pritunl-plugins
   when: pritunl_plugins is defined
+  tags: pritunl-plugins

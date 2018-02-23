@@ -1,0 +1,44 @@
+---
+- name: Check app.reverse_proxy option
+  shell: pritunl get app.reverse_proxy
+  register: app_reverse_proxy
+  failed_when: app_reverse_proxy.rc != 0
+  changed_when: False
+
+- name: Check app.server_ssl option
+  shell: pritunl get app.server_ssl
+  register: app_server_ssl
+  failed_when: app_server_ssl.rc != 0
+  changed_when: False
+
+# Enable reverse proxy
+
+- name: Enable app.reverse_proxy
+  shell: pritunl set app.reverse_proxy true
+  register: resp
+  failed_when: resp.rc != 0
+  changed_when: "'app.reverse_proxy = true' in resp.stdout"
+  when: "'app.reverse_proxy = true' not in app_reverse_proxy.stdout and pritunl_reverse_proxy"
+
+- name: Disable app.server_ssl
+  shell: pritunl set app.server_ssl false
+  register: resp
+  failed_when: resp.rc != 0
+  changed_when: "'app.server_ssl = false' in resp.stdout"
+  when: "'app.server_ssl = false' not in app_server_ssl.stdout and pritunl_reverse_proxy"
+
+# Disable reverse proxy
+
+- name: Disable app.reverse_proxy
+  shell: pritunl set app.reverse_proxy false
+  register: resp
+  failed_when: resp.rc != 0
+  changed_when: "'app.reverse_proxy = false' in resp.stdout"
+  when: "'app.reverse_proxy = false' not in app_reverse_proxy.stdout and pritunl_reverse_proxy == False"
+
+- name: Enable app.server_ssl
+  shell: pritunl set app.server_ssl true
+  register: resp
+  failed_when: resp.rc != 0
+  changed_when: "'app.server_ssl = true' in resp.stdout"
+  when: "'app.server_ssl = true' not in app_server_ssl.stdout and pritunl_reverse_proxy == False"

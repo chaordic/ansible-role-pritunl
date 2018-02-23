@@ -19,6 +19,9 @@ pritunl_debug: "false"
 pritunl_www_path: /usr/share/pritunl/www
 pritunl_local_address_interface: auto
 
+pritunl_reverse_proxy: False
+pritunl_server_port: 443
+
 pritunl_secondary_mongodb: False
 pritunl_secondary_mongodb_uri: ""
 
