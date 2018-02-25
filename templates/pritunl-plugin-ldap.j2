@@ -3,10 +3,10 @@ import os
 import pritunlsdk
 from pritunl import logger
 
-# LDAPSearch README
-# https://github.com/chaordic/python-ldap-simple-search
-
 class LDAPSearch(object):
+    """ It  provides a simple way to performs synchronous LDAP queries.
+    README https://github.com/chaordic/python-ldap-simple-search
+     """
     _conn = None
 
     def __init__(self,
@@ -30,6 +30,7 @@ class LDAPSearch(object):
     def _bind(self):
         l = ldap.initialize(self.uri)
         l.protocol_version = ldap.VERSION3
+        l.set_option(ldap.OPT_NETWORK_TIMEOUT, 10.0)
         try:
             l.simple_bind_s(self.bind_dn, self.password)
         except ldap.INVALID_CREDENTIALS:
@@ -38,8 +39,6 @@ class LDAPSearch(object):
         except ldap.LDAPError as e:
             if type(e.message) == dict and 'desc' in e.message:
                 logger.error(e.message['desc'])
-            if type(e.message) == dict and 'desc' in e.message:
-                logger.error(e)
             else:
                 logger.error(e)
             raise
@@ -50,7 +49,11 @@ class LDAPSearch(object):
             self.conn().unbind_s()
             self._conn = None
 
-    def search(self, base_dn, searchFilter, searchAttribute=None, callback=None):
+    def search(self,
+               base_dn,
+               searchFilter,
+               searchAttribute=None,
+               callback=None):
         try:
             ldap_result_id = self.conn().search(
                                         base_dn,
@@ -69,7 +72,11 @@ class LDAPSearch(object):
             return result_set
         except ldap.LDAPError as e:
             self._unbind()
-            logger.error(e)
+            if type(e.message) == dict and 'desc' in e.message:
+                logger.error(e.message['desc'])
+            else:
+                logger.error(e)
+            raise
 
     def _handleResults(self, data, callback):
         results = []
@@ -99,12 +106,13 @@ SEARCH_ATTRIBUTE = ['{{pritunl_plugins | selectattr("name","equalto","ldap") | m
 
 L = LDAPSearch(URI, BIND_DN, PASSWORD)
 
-# ldapsearch callback
 def filter_groups(dn, record):
+    """ LDAPSearch callback """
     return [item.split(',')[0].replace('cn=', '') for item in record['memberOf'] if GROUP_PATTERN in item]
 
 def sso_authenticate(sso_type, host_id, host_name, user_name, user_email,
                      remote_ip, sso_org_names, sso_group_names, **kwargs):
+    """ Pritunl handler """
 
     search_filter = "(&(mail="+user_name+")(memberOf=cn="+GROUP_PATTERN+"*,"+GROUPS_DN+"))"
 
