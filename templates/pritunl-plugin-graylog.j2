@@ -16,7 +16,7 @@ class OpsLogging(object):
         if not server or not port:
             return False
 
-        self.handler = graypy.GELFHandler(server,
+        self.handler = graypy.GELFUDPHandler(server,
                                           port,
                                           debugging_fields=False)
 

@@ -38,6 +38,6 @@
 
   - name: Download and install pritunl v{{ pritunl_version }}
     apt:
-      deb: "https://github.com/pritunl/pritunl/releases/download/{{ pritunl_version }}/pritunl_{{ pritunl_version }}-0ubuntu1.xenial_all.deb"
+      deb: "https://github.com/pritunl/pritunl/releases/download/{{ pritunl_version }}/pritunl_{{ pritunl_version }}-0ubuntu1.focal_amd64.deb"
 
   when: pritunl_check_deb.rc == 1
